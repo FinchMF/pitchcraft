@@ -81,51 +81,55 @@ class Systems:
     def update_system_base(cls, n_base: int):
          cls.base = n_base
 
-def make_octaves(hz: float, n_octaves: int) -> List[float]:
+class Network:
 
-    octaves = [hz]
-    curr_octave = hz
-    for _ in range(n_octaves):
+    @staticmethod
+    def make_octaves(hz: float, n_octaves: int) -> List[float]:
 
-        octave = curr_octave * 2.0
-        octaves.append(octave)
-        curr_octave = octave
-    
-    return octaves
+        octaves = [hz]
+        curr_octave = hz
+        for _ in range(n_octaves):
 
+            octave = curr_octave * 2.0
+            octaves.append(octave)
+            curr_octave = octave
+        
+        return octaves
 
-def make_octave_interval_system(tone_intvl: str) -> Dict[str, float]:
+    @staticmethod
+    def make_octave_interval_system(tone_intvl: str) -> Dict[str, float]:
 
-    interval_system ={}
+        interval_system ={}
 
-    for tone in range(Systems.tones[tone_intvl]):
+        for tone in range(Systems.tones[tone_intvl]):
 
-        interval_system[f"0-{tone}"] = (2**(tone+1))**(1/Systems.tones[tone_intvl])
+            interval_system[f"0-{tone}"] = (2**(tone+1))**(1/Systems.tones[tone_intvl])
 
-    return interval_system
+        return interval_system
 
+    @staticmethod
+    def make_system(hz: float, system_type: float, 
+                            system_size: RANGE) -> Dict[str, float]:
 
-def make_system(hz: float, system_type: float, 
-                           system_size: RANGE) -> Dict[str, float]:
+        system = {}
 
-    system = {}
+        for pos in system_size:
 
-    for pos in system_size:
+            freq = hz * (system_type)**pos
+            system[f"freq_{pos}"] = round(freq, 2)
 
-        freq = hz * (system_type)**pos
-        system[f"freq_{pos}"] = round(freq, 2)
+        return system
 
-    return system
+    @staticmethod
+    def make_overtone_series(hz: float, system_size: RANGE=range(0,16)) -> List[float]:
 
-def make_overtone_series(hz: float, system_size: RANGE=range(0,16)) -> List[float]:
+        overtone_series = []
+        for pos in system_size:
 
-    overtone_series = []
-    for pos in system_size:
+            harmonic = pos * hz
+            overtone_series.append(harmonic)
 
-        harmonic = pos * hz
-        overtone_series.append(harmonic)
-
-    return overtone_series
+        return overtone_series
 
 # ~ ~ ~ ~ ~ ~ Pitch Utils ~ ~ ~ ~ ~ ~ ~ #
 

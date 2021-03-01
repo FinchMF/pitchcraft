@@ -11,7 +11,7 @@ RANGE = TypeVar('range')
 class Hz:
 
     tone_intvl='semi_tone'
-    intervals=util.make_octave_interval_system(tone_intvl=tone_intvl)
+    intervals=util.Network.make_octave_interval_system(tone_intvl=tone_intvl)
     interval_system=util.Systems.interval_systems[tone_intvl]
     system_size=util.Systems.octave_systems[tone_intvl]
 
@@ -35,16 +35,16 @@ class Hz:
 
     def make_octaves(self, n_octaves: int) -> List[float]:
 
-        return util.make_octaves(hz=self.hz, n_octaves=n_octaves)
+        return util.Network.make_octaves(hz=self.hz, n_octaves=n_octaves)
 
     def make_system(self, system_type: float=Hz.interval_system,
                           system_size: RANGE=range(Hz.system_size)) -> Dict[str, float]:
 
-        return util.make_system(hz=self.hz, system_type=system_type, system_size=system_size)
+        return util.Network.make_system(hz=self.hz, system_type=system_type, system_size=system_size)
 
     def make_overtone_series(self, system_size: RANGE=range(0, 16)) -> List[float]:
 
-        return util.make_overtone_series(hz=self.hz, system_size=system_size)
+        return util.Network.make_overtone_series(hz=self.hz, system_size=system_size)
 
 
 
@@ -220,7 +220,7 @@ class Wav:
                     __make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
                             hz=self.hz, wav_type=wav_type)
 
-            
+
 
 
     
