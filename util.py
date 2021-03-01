@@ -12,6 +12,18 @@ class Systems:
     base: int = 6
 
     tones: Dict[str, int] = {
+
+        'half_base_tone': base / 3,
+        'tri_base_tone': base / 2,
+        'quarter_base_tone': base-2,
+        'fifth_base_tone': base-1,
+        'base_tone': base,
+        'seventh_base_tone': base+1,
+        'eighth_base_tone': base+2,
+        'ninth_base_tone': base+3,
+        'tenth_base_tone': base+4,
+        'eleventh_base_tone': base+5,
+
         'semi_tone': 2*base,
         'tri_tone': 3*base,
         'quarter_tone': 4*base,
@@ -22,21 +34,45 @@ class Systems:
     }
 
     interval_systems: Dict[str, float] = {
+
+        'half_base_tone': 2**(1/tones['half_base_tone']),
+        'tri_base_tone': 2**(1/tones['tri_base_tone']),
+        'quarter_base_tone': 2**(1/tones['quarter_base_tone']),
+        'fifth_base_tone': 2**(1/tones['fifth_tone']),
+        'base_tone': 2**(1/tones['base_tone']),
+        'seventh_base_tone': 2**(1/tones['seventh_base_tone']),
+        'eighth_base_tone': 2**(1/tones['eighth_base_tone']),
+        'ninth_base_tone': 2**(1/tones['ninth_base_tone']),
+        'tenth_base_tone': 2**(1/tones['tenth_base_tone']),
+        'eleventh_base_tone': 2**(1/tones['eleventh_base_tone']),
+
         'semi_tone': 2**(1/tones['semi_tone']),
         'tri_tone': 2**(1/tones['tri_tone']),
         'quarter_tone': 2**(1/tones['quarter_tone']),
         'sixth_tone': 2**(1/tones['sixth_tone']),
-        'eigth_tone': 2**(1/tones['eigth_tone']),
+        'eighth_tone': 2**(1/tones['eigth_tone']),
         'twelevth_tone': 2**(1/tones['twelevth_tone']),
         'twenty_fourth_tone':2**(1/tones['twenty_fourth_tone'])
     }
 
     octave_systems: Dict[str, int] = {
+        
+        'half_base_tone': (tones['half_base_tone']-1)*8,
+        'tri_base_tone': (tones['tri_base_tone']-1)*8,
+        'quarter_base_tone': (tones['quarter_base_tone']-1)*8,
+        'fifth_base_tone': (tones['fifth_base_tone']-1)*8,
+        'base_tone': (tones['base_tone']-1)*8,
+        'seventh_base_tone': (tones['seventh_base_tone']-1)*8,
+        'eighth_base_tone': (tones['eighth_base_tone']-1)*8,
+        'ninth_base_tone': (tones['ninth_base_tone']-1)*8,
+        'tenth_base_tone': (tones['tenth_base_tone']-1)*8,
+        'eleventh_base_tone': (tones['eleventh_base_tone']-1)*8,
+
         'semi_tone': (tones['semi_tone']-1)*8,
         'tri_tone': (tones['tri_tone']-1)*8,
         'quarter_tone': (tones['quarter_tone']-1)*8,
         'sixth_tone': (tones['sixth_tone']-1)*8,
-        'eigth_tone': (tones['eight_tone']-1)*8,
+        'eighth_tone': (tones['eight_tone']-1)*8,
         'twelevth_tone': (tones['twelevth_tone']-1)*8,
         'twenty_fourth_tone': (tones['twenty_fourth']-1*8)
     }
