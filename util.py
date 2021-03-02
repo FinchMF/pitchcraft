@@ -13,8 +13,8 @@ class Systems:
 
     tones: Dict[str, int] = {
 
-        'half_base_tone': base / 3,
-        'tri_base_tone': base / 2,
+        'half_base_tone': base // 3,
+        'tri_base_tone': base // 2,
         'quarter_base_tone': base-2,
         'fifth_base_tone': base-1,
         'base_tone': base,
@@ -28,7 +28,7 @@ class Systems:
         'tri_tone': 3*base,
         'quarter_tone': 4*base,
         'sixth_tone': 6*base,
-        'eigth_tone': 8*base,
+        'eighth_tone': 8*base,
         'twelevth_tone': 12*base,
         'twenty_fourth_tone': 24*base
     }
@@ -38,7 +38,7 @@ class Systems:
         'half_base_tone': 2**(1/tones['half_base_tone']),
         'tri_base_tone': 2**(1/tones['tri_base_tone']),
         'quarter_base_tone': 2**(1/tones['quarter_base_tone']),
-        'fifth_base_tone': 2**(1/tones['fifth_tone']),
+        'fifth_base_tone': 2**(1/tones['fifth_base_tone']),
         'base_tone': 2**(1/tones['base_tone']),
         'seventh_base_tone': 2**(1/tones['seventh_base_tone']),
         'eighth_base_tone': 2**(1/tones['eighth_base_tone']),
@@ -50,7 +50,7 @@ class Systems:
         'tri_tone': 2**(1/tones['tri_tone']),
         'quarter_tone': 2**(1/tones['quarter_tone']),
         'sixth_tone': 2**(1/tones['sixth_tone']),
-        'eighth_tone': 2**(1/tones['eigth_tone']),
+        'eighth_tone': 2**(1/tones['eighth_tone']),
         'twelevth_tone': 2**(1/tones['twelevth_tone']),
         'twenty_fourth_tone':2**(1/tones['twenty_fourth_tone'])
     }
@@ -72,9 +72,9 @@ class Systems:
         'tri_tone': (tones['tri_tone']-1)*8,
         'quarter_tone': (tones['quarter_tone']-1)*8,
         'sixth_tone': (tones['sixth_tone']-1)*8,
-        'eighth_tone': (tones['eight_tone']-1)*8,
+        'eighth_tone': (tones['eighth_tone']-1)*8,
         'twelevth_tone': (tones['twelevth_tone']-1)*8,
-        'twenty_fourth_tone': (tones['twenty_fourth']-1*8)
+        'twenty_fourth_tone': (tones['twenty_fourth_tone']-1*8)
     }
 
     @classmethod
@@ -109,11 +109,11 @@ class Network:
 
     @staticmethod
     def make_system(hz: float, system_type: float, 
-                            system_size: RANGE) -> Dict[str, float]:
+                               system_size: RANGE) -> Dict[str, float]:
 
         system = {}
 
-        for pos in system_size:
+        for pos in range(system_size):
 
             freq = hz * (system_type)**pos
             system[f"freq_{pos}"] = round(freq, 2)

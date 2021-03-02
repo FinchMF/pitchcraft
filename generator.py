@@ -11,13 +11,14 @@ RANGE = TypeVar('range')
 class Hz:
 
     tone_intvl='semi_tone'
-    intervals=util.Network.make_octave_interval_system(tone_intvl=tone_intvl)
-    interval_system=util.Systems.interval_systems[tone_intvl]
-    system_size=util.Systems.octave_systems[tone_intvl]
 
-    def __init__(self, hz: float):
+
+    def __init__(self, hz: float=None):
 
         self.__hz = hz
+        self.__intervals=util.Network.make_octave_interval_system(tone_intvl=Hz.tone_intvl)
+        self.__interval_system=util.Systems.interval_systems[Hz.tone_intvl]
+        self.__system_size=util.Systems.octave_systems[Hz.tone_intvl]
     
     @property
     def hz(self):
@@ -27,9 +28,25 @@ class Hz:
     def hz(self, hz: float):
         self.__hz = hz
 
-    @classmethod
-    def update_root_interval(cls, interval_type: str):
+    @property
+    def interval_system_base_unit(self):
+        return self.__interval_system
 
+    @property
+    def system_size(self):
+        return self.__system_size
+    
+    @property
+    def intervals(self):
+        return self.__intervals
+
+    @classmethod
+    def tone_interval(cls):
+        return cls.tone_intvl
+
+
+    @classmethod
+    def update(cls, interval_type: str):
         cls.tone_intvl=interval_type
 
 
@@ -37,10 +54,12 @@ class Hz:
 
         return util.Network.make_octaves(hz=self.hz, n_octaves=n_octaves)
 
-    def make_system(self, system_type: float=Hz.interval_system,
-                          system_size: RANGE=range(Hz.system_size)) -> Dict[str, float]:
+    def make_system(self, system_size: int=None) -> Dict[str, float]:
 
-        return util.Network.make_system(hz=self.hz, system_type=system_type, system_size=system_size)
+        system_size = self.system_size if system_size == None else system_size
+
+        return util.Network.make_system(hz=self.hz, system_type=self.interval_system_base_unit, 
+                                                    system_size=system_size)
 
     def make_overtone_series(self, system_size: RANGE=range(0, 16)) -> List[float]:
 
@@ -48,7 +67,7 @@ class Hz:
 
 
 
-def __make_wav(carrier: List[float], sr: int, hz: float, wav_type: str, 
+def _make_wav(carrier: List[float], sr: int, hz: float, wav_type: str, 
                modulator: List[float]=None, ac: float=None, ka: float=None):
 
     if modulator:
@@ -66,159 +85,162 @@ def __make_wav(carrier: List[float], sr: int, hz: float, wav_type: str,
 
 class Wav:
 
-    duration: float = 10.0
-    duty: float = 0.8
-    sr: int = 44100
-    modulator_hz: float = 0.25
-    ac: float = 1.0
-    ka: float = 0.25
+    _duration: float = 10.0
+    _duty: float = 0.8
+    _sr: int = 44100
+    _modulator_hz: float = 0.25
+    _ac: float = 1.0
+    _ka: float = 0.25
 
     def __init__(self, carrier_hz: float=util.pitch_to_hz['A'][4]):
 
 
         self.__hz = carrier_hz
-        self.__sr = Wav.sr
-        self.__duration = Wav.duration
-        self.__duty = Wav.duty
-        self.__modulator = np.sin(2 * np.pi * Wav.modulator_hz * ((Wav.sr * Wav.duration)/Wav.sr))
+        self.__sr = Wav._sr
+        self.__duration = Wav._duration
+        self.__duty = Wav._duty
+        self.__modulator = np.sin(2 * np.pi * Wav._modulator_hz * ((self.__sr * self.__duration)/self.__sr))
+        self.__t_samples = np.arange(self.__sr * self.__duration)
+        self.__wav = 2 * np.pi * self.__hz * self.__t_samples / self.__sr
 
-        @property
-        def sr(self):
-            return self.__sr
-        
-        @sr.setter
-        def sr(self, sr):
-            self.__sr = sr
-        
-        @property
-        def hz(self):
-            return self.__hz
-
-        @hz.setter
-        def hz(self, carrier_hz):
-            self.__hz = carrier_hz
-
-        @property
-        def duration(self):
-            return self.__duration
-
-        @duration.setter
-        def duration(self, duration):
-            self.__duration = duration
-
-        @property
-        def duty(self):
-            return self.__duty
-
-        @duty.setter
-        def duty(self, duty):
-            self.__duty = duty
-
-        @property
-        def t_samples(self):
-            return np.arange(self.sr * self.duration)
-        
-        @property
-        def wav(self):
-            return 2 * np.pi * self.carrier_hz * self.t_samples / self.sr
-        
-        @property
-        def sin_carrier(self):
-            return np.sin(self.wav)
-
-        @property
-        def sq_carrier(self):
-            return sg.square(self.wav)
-
-        @property
-        def sq_duty_carrier(self):
-            return sg.square(self.wav, self.duty)
-
-        @property
-        def sawtooth_carrier(self):
-            return sg.sawtooth(self.wav)
-
-        @property
-        def modulator(self):
-            return self.__modulator
-
-        @classmethod
-        def update_duration(cls, duration: float):
-            cls.duration = duration
-
-        @classmethod
-        def update_duty(cls, duty: float):
-            cls.duty = duty
-
-        @classmethod
-        def update_samplerate(cls, sr: int):
-            cls.sr = sr
-
-        @classmethod
-        def update_modulator_hz(cls, modulator_hz: float):
-            cls.modulator_hz = modulator_hz
-
-        @classmethod
-        def update_ac(cls, ac: float):
-            cls.ac = ac 
-
-        @classmethod
-        def update_kc(cls, ka: float):
-            cls.ka = ka
+    @property
+    def sr(self):
+        return self.__sr
     
-        def make_wav(self, wav_type: str, modulated: bool=False):
+    @sr.setter
+    def sr(self, sr):
+        self.__sr = sr
+    
+    @property
+    def hz(self):
+        return self.__hz
 
-            if wav_type == 'sine':
+    @hz.setter
+    def hz(self, carrier_hz):
+        self.__hz = carrier_hz
 
-                if modulated:
+    @property
+    def duration(self):
+        return self.__duration
 
-                    __make_wav(carrier=self.sin_carrier, sr=self.sr,
-                               hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
-                               ac=Wav.ac, ka=Wav.ka)
+    @duration.setter
+    def duration(self, duration):
+        self.__duration = duration
 
-                else:
+    @property
+    def duty(self):
+        return self.__duty
 
-                    __make_wav(carrier=self.sin_carrier, sr=self.sr, 
-                            hz=self.hz, wav_type=wav_type)
+    @duty.setter
+    def duty(self, duty):
+        self.__duty = duty
 
-            elif wav_type == 'sqaure':
+    @property
+    def t_samples(self):
+        return self.__t_samples
+    
+    @property
+    def wav(self):
+        return self.__wav
+    
+    @property
+    def sin_carrier(self):
+        return np.sin(self.wav)
 
-                if modulated:
+    @property
+    def sq_carrier(self):
+        return sg.square(self.wav)
 
-                    __make_wav(carrier=self.sq_carrier, sr=self.sr,
-                               hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
-                               ac=Wav.ac, ka=Wav.ka)
+    @property
+    def sq_duty_carrier(self):
+        return sg.square(self.wav, self.duty)
 
-                else:
+    @property
+    def sawtooth_carrier(self):
+        return sg.sawtooth(self.wav)
 
-                    __make_wav(carrier=self.sq_carrier, sr=self.sr,
-                            hz=self.hz, wav_type=wav_type)
+    @property
+    def modulator(self):
+        return self.__modulator
 
-            elif wav_type == 'square_duty':
 
-                if modulated:
+    @classmethod
+    def update_duration(cls, duration: float):
+        cls._duration = duration
 
-                    __make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
-                               hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
-                               ac=Wav.ac, ka=Wav.ka)
+    @classmethod
+    def update_duty(cls, duty: float):
+        cls._duty = duty
 
-                else:
+    @classmethod
+    def update_samplerate(cls, sr: int):
+        cls._sr = sr
 
-                    __make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
-                            hz=self.hz, wav_type=wav_type)
+    @classmethod
+    def update_modulator_hz(cls, modulator_hz: float):
+        cls._modulator_hz = modulator_hz
 
-            elif wav_type == 'sawtooth':
+    @classmethod
+    def update_ac(cls, ac: float):
+        cls._ac = ac 
 
-                if modulated:
+    @classmethod
+    def update_kc(cls, ka: float):
+        cls._ka = ka
 
-                    __make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
-                               hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
-                               ac=Wav.ac, ka=Wav.ka)
+    def make_wav(self, wav_type: str, modulated: bool=False):
 
-                else:
-                        
-                    __make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
-                            hz=self.hz, wav_type=wav_type)
+        if wav_type == 'sine':
+
+            if modulated:
+
+                _make_wav(carrier=self.sin_carrier, sr=self.sr,
+                            hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
+                            ac=Wav._ac, ka=Wav._ka)
+
+            else:
+
+                _make_wav(carrier=self.sin_carrier, sr=self.sr, 
+                        hz=self.hz, wav_type=wav_type)
+
+        elif wav_type == 'sqaure':
+
+            if modulated:
+
+                _make_wav(carrier=self.sq_carrier, sr=self.sr,
+                            hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
+                            ac=Wav._ac, ka=Wav._ka)
+
+            else:
+
+                _make_wav(carrier=self.sq_carrier, sr=self.sr,
+                        hz=self.hz, wav_type=wav_type)
+
+        elif wav_type == 'square_duty':
+
+            if modulated:
+
+                _make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
+                            hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
+                            ac=Wav._ac, ka=Wav._ka)
+
+            else:
+
+                _make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
+                        hz=self.hz, wav_type=wav_type)
+
+        elif wav_type == 'sawtooth':
+
+            if modulated:
+
+                _make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
+                            hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
+                            ac=Wav._ac, ka=Wav._ka)
+
+            else:
+                    
+                _make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
+                        hz=self.hz, wav_type=wav_type)
 
 
 
