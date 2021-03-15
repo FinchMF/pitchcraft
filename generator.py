@@ -3,9 +3,10 @@ from scipy import signal as sg
 from scipy.io.wavfile import read, write
 import numpy as np
 import util
-
+import matplotlib.pyplot as plt 
 from typing import List, Dict, TypeVar
 RANGE = TypeVar('range')
+FIG = TypeVar('matplotlib.figure.Figure')
 
 
 class Hz:
@@ -148,10 +149,34 @@ class Factory:
         data = np.int16(carrier * 32767)
         write(f"simple_{hz}_{wav_type}.wav", rate=sr, data=data)
 
+    @staticmethod
+    def show_signal(wav_data: List[float]) -> FIG:
+        """
+        Generates graph showing wave form
+        ---------------------------------
+        Recieves:
+            - wav data
+        Returns:
+            - graph
+        """
+        fig = plt.figure()
+        plt.rcParams['figure.facecolor'] = 'black'
+        plt.rcParams['axes.facecolor'] = 'black'
+        # we have the data set to 500 units to make the form visible
+        plt.plot(wav_data[:500], color='red')
+        plt.close()
+
+        return fig
 
 class Wav:
 
-    _duration: float = 10.0
+    """
+    Wav object recieves a frequency,
+    constructs a wav form
+    and saves the audio as a wav file
+    """
+    # sets wav constructing factor
+    _duration: float = 10.0 # in seconds
     _duty: float = 0.8
     _sr: int = 44100
     _modulator_hz: float = 0.25
@@ -160,7 +185,11 @@ class Wav:
 
     def __init__(self, carrier_hz: float=util.pitch_to_hz['A'][4]):
 
-
+        """
+        Constructor develops necessary components to generate wav form and wav file
+        ---------------------------------------------------------------------------
+        Default Hz is A4 (440.0hz)
+        """
         self.__hz = carrier_hz
         self.__sr = Wav._sr
         self.__duration = Wav._duration
@@ -169,6 +198,7 @@ class Wav:
         self.__t_samples = np.arange(self.__sr * self.__duration)
         self.__wav = 2 * np.pi * self.__hz * self.__t_samples / self.__sr
 
+    # ~~~~ object configurations ~~~~~
     @property
     def sr(self):
         return self.__sr
@@ -253,57 +283,47 @@ class Wav:
     def update_kc(cls, ka: float):
         cls._ka = ka
 
+    # ~~~~ object functionality ~~~~
     def make_wav(self, wav_type: str, modulated: bool=False):
 
-        if wav_type == 'sine':
+        """
+        Generates Wav File
+        ------------------
+        Recieves:
+            - wav form type
+            - boolean switch if modulation desired
+        Returns:
+            - Generated Wav File
+        """
+        W = {
+            'sine': self.sin_carrier,
+            'square': self.sq_carrier,
+            'square_duty': self.sq_duty_carrier,
+            'sawtooth': self.sawtooth_carrier
+        }
+        if modulated:
+            # if modulation is turned on, necessary components are automatically added
+            Factory._make_wav(carrier=W[wav_type], sr=self.sr,
+                        hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
+                        ac=Wav._ac, ka=Wav._ka)
 
-            if modulated:
+        else:
+            # if modulation is not declared, a persistant tone is generated
+            Factory._make_wav(carrier=W[wav_type], sr=self.sr, 
+                    hz=self.hz, wav_type=wav_type)
 
-                Factory._make_wav(carrier=self.sin_carrier, sr=self.sr,
-                            hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
-                            ac=Wav._ac, ka=Wav._ka)
+    def show_wav(self, wav_type: str) -> FIG:
 
-            else:
+        """
+        Generates a visual representation of the signal
+        -----------------------------------------------
+        """
 
-                Factory._make_wav(carrier=self.sin_carrier, sr=self.sr, 
-                        hz=self.hz, wav_type=wav_type)
+        W = {
+            'sine': self.sin_carrier,
+            'square': self.sq_carrier,
+            'square_duty': self.sq_duty_carrier,
+            'sawtooth': self.sawtooth_carrier
+        }
 
-        elif wav_type == 'sqaure':
-
-            if modulated:
-
-                Factory._make_wav(carrier=self.sq_carrier, sr=self.sr,
-                            hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
-                            ac=Wav._ac, ka=Wav._ka)
-
-            else:
-
-                Factory._make_wav(carrier=self.sq_carrier, sr=self.sr,
-                        hz=self.hz, wav_type=wav_type)
-
-        elif wav_type == 'square_duty':
-
-            if modulated:
-
-                Factory._make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
-                            hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
-                            ac=Wav._ac, ka=Wav._ka)
-
-            else:
-
-                Factory._make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
-                        hz=self.hz, wav_type=wav_type)
-
-        elif wav_type == 'sawtooth':
-
-            if modulated:
-
-                Factory._make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
-                            hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
-                            ac=Wav._ac, ka=Wav._ka)
-
-            else:
-                    
-                Factory._make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
-                        hz=self.hz, wav_type=wav_type)
-
+        return Factory.show_signal(wav_data=W[wav_type])
