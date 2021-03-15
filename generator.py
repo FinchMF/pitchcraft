@@ -9,11 +9,21 @@ RANGE = TypeVar('range')
 
 
 class Hz:
-
+    """
+    Hz object recieves a frequency 
+    and develops dynamic pitch systems
+    """
+    # sets the system's base interval unit
     tone_intvl='semi_tone'
 
-
     def __init__(self, hz: float=None):
+
+        """
+        Constructor develops three systems:
+            - octave interval system (system of interval divison within one octave)
+            - interval system of divisions
+            - octave system used to measure natural system size given 8 octaves
+        """
 
         self.__hz = hz
         self.__intervals=util.Network.make_octave_interval_system(tone_intvl=Hz.tone_intvl)
@@ -44,7 +54,6 @@ class Hz:
     def tone_interval(cls):
         return cls.tone_intvl
 
-
     @classmethod
     def update(cls, interval_type: str):
         cls.tone_intvl=interval_type
@@ -52,10 +61,37 @@ class Hz:
 
     def make_octaves(self, n_octaves: int) -> List[float]:
 
+        """
+        Dynamically generates octave's frequencies
+        ------------------------------------------
+        Receives:
+            - Starting Hz
+            - number of desired octaves to generate 
+        Return:
+            - a list of frequencies that correspond to each octave
+            respective to the number of octaves chosen above the 
+            starting Hz
+        """
+
         return util.Network.make_octaves(hz=self.hz, n_octaves=n_octaves)
 
     def make_system(self, system_size: int=None) -> Dict[str, float]:
 
+        """
+        Dynamically generates chromatic system's frequencies
+        ----------------------------------------------------
+        Recieves:
+            - Starting Hz
+            - System size (
+                ie number of chromatic frequencies 
+                from the the starting Hz moving up divisions
+                based on the root interval system desired
+                )
+        Returns:
+            - Dictionary of Frequency Positions and corresponding Frequencies
+        """
+        # if system size is not chosen, the deafult system size inherent
+        # in the root interval system will be chosen
         system_size = self.system_size if system_size == None else system_size
 
         return util.Network.make_system(hz=self.hz, system_type=self.interval_system_base_unit, 
@@ -63,24 +99,35 @@ class Hz:
 
     def make_overtone_series(self, system_size: RANGE=range(0, 16)) -> List[float]:
 
+        """
+        Dynamically generates Overtone Series' frequencies
+        --------------------------------------------------
+        Recieves:
+            - Starting Hz
+            - System Size (default to 16 partials)
+        Returns:
+            - List of 16 frequencies respective of the starting Hz
+            corresponding to the harmonic series
+        """
+
         return util.Network.make_overtone_series(hz=self.hz, system_size=system_size)
 
+class Factory:
+    @staticmethod
+    def _make_wav(carrier: List[float], sr: int, hz: float, wav_type: str, 
+                modulator: List[float]=None, ac: float=None, ka: float=None):
 
+        if modulator:
 
-def _make_wav(carrier: List[float], sr: int, hz: float, wav_type: str, 
-               modulator: List[float]=None, ac: float=None, ka: float=None):
+            envelope = ac * (1.0 + ka * modulator)
+            modulated = envelope * carrier
+            modulated *= 0.3
+            modulated_data = np.int16(modulated * 32767)
+            write(f"modulated_{hz}_{wav_type}.wav", rate=sr, data=modulated_data)
 
-    if modulator:
-
-        envelope = ac * (1.0 + ka * modulator)
-        modulated = envelope * carrier
-        modulated *= 0.3
-        modulated_data = np.int16(modulated * 32767)
-        write(f"modulated_{hz}_{wav_type}.wav", rate=sr, data=modulated_data)
-
-    carrier *= 0.3
-    data = np.int16(carrier * 32767)
-    write(f"simple_{hz}_{wav_type}.wav", rate=sr, data=data)
+        carrier *= 0.3
+        data = np.int16(carrier * 32767)
+        write(f"simple_{hz}_{wav_type}.wav", rate=sr, data=data)
 
 
 class Wav:
@@ -163,7 +210,6 @@ class Wav:
     def modulator(self):
         return self.__modulator
 
-
     @classmethod
     def update_duration(cls, duration: float):
         cls._duration = duration
@@ -194,52 +240,52 @@ class Wav:
 
             if modulated:
 
-                _make_wav(carrier=self.sin_carrier, sr=self.sr,
+                Factory._make_wav(carrier=self.sin_carrier, sr=self.sr,
                             hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
                             ac=Wav._ac, ka=Wav._ka)
 
             else:
 
-                _make_wav(carrier=self.sin_carrier, sr=self.sr, 
+                Factory._make_wav(carrier=self.sin_carrier, sr=self.sr, 
                         hz=self.hz, wav_type=wav_type)
 
         elif wav_type == 'sqaure':
 
             if modulated:
 
-                _make_wav(carrier=self.sq_carrier, sr=self.sr,
+                Factory._make_wav(carrier=self.sq_carrier, sr=self.sr,
                             hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
                             ac=Wav._ac, ka=Wav._ka)
 
             else:
 
-                _make_wav(carrier=self.sq_carrier, sr=self.sr,
+                Factory._make_wav(carrier=self.sq_carrier, sr=self.sr,
                         hz=self.hz, wav_type=wav_type)
 
         elif wav_type == 'square_duty':
 
             if modulated:
 
-                _make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
+                Factory._make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
                             hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
                             ac=Wav._ac, ka=Wav._ka)
 
             else:
 
-                _make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
+                Factory._make_wav(carrier=self.sq_duty_carrier, sr=self.sr,
                         hz=self.hz, wav_type=wav_type)
 
         elif wav_type == 'sawtooth':
 
             if modulated:
 
-                _make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
+                Factory._make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
                             hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
                             ac=Wav._ac, ka=Wav._ka)
 
             else:
                     
-                _make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
+                Factory._make_wav(carrier=self.sawtooth_carrier, sr=self.sr,
                         hz=self.hz, wav_type=wav_type)
 
 
