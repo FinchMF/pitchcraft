@@ -288,7 +288,6 @@ class Detect:
     def end_freq(self, end_freq):
         self.__end_feq = end_freq
 
-   
     def closest_pitch(self)-> str:
 
         h = round(12*log2(self.freq/Detect.C0))
@@ -297,7 +296,6 @@ class Detect:
 
         return f"{Detect.name[n]}{str(octave)}"
 
-    
     def find_cent_diff(self, freq_: float=None)-> float:
 
         if freq_:
