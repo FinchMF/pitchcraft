@@ -117,15 +117,34 @@ class Factory:
     def _make_wav(carrier: List[float], sr: int, hz: float, wav_type: str, 
                 modulator: List[float]=None, ac: float=None, ka: float=None):
 
+        """
+        Dynamically generates tone as wav file
+        --------------------------------------
+        Recieves:
+            - Starting Hz
+            - Carrier array
+            - Sample Rate
+            - Wav Form Type
+            - Modulator Carrier Hz
+            - AC
+            - KA
+        Return:
+            - Returns nothing as a function but saves a wav file
+            based on the dictating data
+        """
+        # currently there is the option to overlay
+        # a modulation envelope over the tone 
         if modulator:
-
+            # construct the envelope pattern
             envelope = ac * (1.0 + ka * modulator)
+            # develop the modulated data, passing it through the envelope
             modulated = envelope * carrier
-            modulated *= 0.3
+            modulated *= 0.3 # the severity of the modualtion
+            # generate the tone
             modulated_data = np.int16(modulated * 32767)
             write(f"modulated_{hz}_{wav_type}.wav", rate=sr, data=modulated_data)
-
-        carrier *= 0.3
+        # if no modulation desired, a consistent tone is generated
+        carrier *= 0.3 # the amplitude of the wav
         data = np.int16(carrier * 32767)
         write(f"simple_{hz}_{wav_type}.wav", rate=sr, data=data)
 
