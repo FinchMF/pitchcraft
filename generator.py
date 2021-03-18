@@ -183,7 +183,7 @@ class Wav:
     _ac: float = 1.0
     _ka: float = 0.25
 
-    def __init__(self, carrier_hz: float=util.pitch_to_hz['A'][4]):
+    def __init__(self, carrier_hz: float=util.Transform.pitch_to_hz['A'][4]):
 
         """
         Constructor develops necessary components to generate wav form and wav file
@@ -256,6 +256,10 @@ class Wav:
         return sg.sawtooth(self.wav)
 
     @property
+    def triangle_carrier(self):
+        return np.abs(sg.sawtooth(self.wav))
+
+    @property
     def modulator(self):
         return self.__modulator
 
@@ -299,7 +303,8 @@ class Wav:
             'sine': self.sin_carrier,
             'square': self.sq_carrier,
             'square_duty': self.sq_duty_carrier,
-            'sawtooth': self.sawtooth_carrier
+            'sawtooth': self.sawtooth_carrier,
+            'triangle': self.triangle_carrier
         }
         if modulated:
             # if modulation is turned on, necessary components are automatically added
@@ -323,7 +328,8 @@ class Wav:
             'sine': self.sin_carrier,
             'square': self.sq_carrier,
             'square_duty': self.sq_duty_carrier,
-            'sawtooth': self.sawtooth_carrier
+            'sawtooth': self.sawtooth_carrier,
+            'triangle': self.triangle_carrier
         }
 
         return Factory.show_signal(wav_data=W[wav_type])
