@@ -107,19 +107,41 @@ class Systems:
 
 class Network:
     """
-    Object containing dynamic system building objects
-    -------------------------------------------------
-    
+    Network object containing dynamic system building objects
+    ---------------------------------------------------------
+    There are four Networks present in this object. 
+        - make_octaves:
+             - builds a system of octaves based on the
+                the number of octaves declared
+        - make_octave_interval_system:
+            - builds a sysem that divides the octave
+                into declared intervals
+        - make_system:
+            - builds system in its entirety based on declared
+                system type and system size 
+
+                if the system is semi tone 12 division system,
+                equal temperment is factored in
+
+        - make_overtone series:
+            - builds system according harmonic series
+                and is factored towards just intonation
     """
     @staticmethod
     def make_octaves(hz: float, n_octaves: int) -> List[float]:
 
-
-        octaves = [hz]
+        """
+        Generates Frequences Octaves apart for n Octaves
+        ------------------------------------------------
+        """
+        # set a container to collect freqs
+        octaves = [hz] 
+        # begin with initializing freq
         curr_octave = hz
         for _ in range(n_octaves):
-
+            # iterate through delcared octaves
             octave = curr_octave * 2.0
+            # generate the next ocatve and collect
             octaves.append(octave)
             curr_octave = octave
         
@@ -127,11 +149,16 @@ class Network:
 
     @staticmethod
     def make_octave_interval_system(tone_intvl: str) -> Dict[str, float]:
-
+        """
+        Generates Divisions of the Octave
+        ---------------------------------
+        Provides floats representing the size of each interval
+        """
+        # set container for ocatve based system
         interval_system ={}
-
+        # iterate through number of divisions
         for tone in range(Systems.tones[tone_intvl]):
-
+            # set interval
             interval_system[f"0-{tone}"] = (2**(tone+1))**(1/Systems.tones[tone_intvl])
 
         return interval_system
@@ -215,7 +242,7 @@ class Transform:
                         6: 1318.51,
                         7: 2637.02,
                         8: 5274.04},
-                'F': {-1: 10.91,
+                 'F': {-1: 10.91,
                         0: 21.83,
                         1: 43.65,
                         2: 87.31,
@@ -235,7 +262,7 @@ class Transform:
                         6: 1479.98,
                         7: 2959.96,
                         8: 5919.91},
-                'G': {-1: 12.25,
+                 'G': {-1: 12.25,
                         0: 24.50,
                         1: 49.00,
                         2: 98.00,
@@ -255,7 +282,7 @@ class Transform:
                         6: 1661.22,
                         7: 3322.44,
                         8: 6644.88},
-                'A': {-1: 13.75,
+                 'A': {-1: 13.75,
                         0: 27.50,
                         1: 55.00,
                         2: 110.00,
@@ -275,7 +302,7 @@ class Transform:
                         6: 1864.66,
                         7: 3729.31,
                         8: 7458.62},
-                'B': {-1: 15.43,
+                 'B': {-1: 15.43,
                         0: 30.87,
                         1: 61.74,
                         2: 123.47,

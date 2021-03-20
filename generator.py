@@ -150,7 +150,7 @@ class Factory:
         write(f"simple_{hz}_{wav_type}.wav", rate=sr, data=data)
 
     @staticmethod
-    def show_signal(wav_data: List[float]) -> FIG:
+    def show_signal(wav_data: List[float], zoom: int=500) -> FIG:
         """
         Generates graph showing wave form
         ---------------------------------
@@ -163,7 +163,7 @@ class Factory:
         plt.rcParams['figure.facecolor'] = 'black'
         plt.rcParams['axes.facecolor'] = 'black'
         # we have the data set to 500 units to make the form visible
-        plt.plot(wav_data[:500], color='red')
+        plt.plot(wav_data[:zoom], color='red')
         plt.close()
 
         return fig
@@ -175,7 +175,7 @@ class Wav:
     constructs a wav form
     and saves the audio as a wav file
     """
-    # sets wav constructing factor
+    # sets wav constructing factors
     _duration: float = 10.0 # in seconds
     _duty: float = 0.8
     _sr: int = 44100
@@ -197,6 +197,13 @@ class Wav:
         self.__modulator = np.sin(2 * np.pi * Wav._modulator_hz * ((self.__sr * self.__duration)/self.__sr))
         self.__t_samples = np.arange(self.__sr * self.__duration)
         self.__wav = 2 * np.pi * self.__hz * self.__t_samples / self.__sr
+        self.__W = {
+            'sine': self.sin_carrier,
+            'square': self.sq_carrier,
+            'square_duty': self.sq_duty_carrier,
+            'sawtooth': self.sawtooth_carrier,
+            'triangle': self.triangle_carrier
+        }
 
     # ~~~~ object configurations ~~~~~
     @property
@@ -262,6 +269,10 @@ class Wav:
     @property
     def modulator(self):
         return self.__modulator
+    
+    @property
+    def W(self):
+        return self.__W
 
     @classmethod
     def update_duration(cls, duration: float):
@@ -299,37 +310,23 @@ class Wav:
         Returns:
             - Generated Wav File
         """
-        W = {
-            'sine': self.sin_carrier,
-            'square': self.sq_carrier,
-            'square_duty': self.sq_duty_carrier,
-            'sawtooth': self.sawtooth_carrier,
-            'triangle': self.triangle_carrier
-        }
+
         if modulated:
             # if modulation is turned on, necessary components are automatically added
-            Factory._make_wav(carrier=W[wav_type], sr=self.sr,
+            Factory._make_wav(carrier=self.W[wav_type], sr=self.sr,
                         hz=self.hz, wav_type=wav_type, modulator=self.modulator, 
                         ac=Wav._ac, ka=Wav._ka)
 
         else:
             # if modulation is not declared, a persistant tone is generated
-            Factory._make_wav(carrier=W[wav_type], sr=self.sr, 
+            Factory._make_wav(carrier=self.W[wav_type], sr=self.sr, 
                     hz=self.hz, wav_type=wav_type)
 
-    def show_wav(self, wav_type: str) -> FIG:
+    def show_wav(self, wav_type: str, zoom: int=500) -> FIG:
 
         """
         Generates a visual representation of the signal
         -----------------------------------------------
         """
 
-        W = {
-            'sine': self.sin_carrier,
-            'square': self.sq_carrier,
-            'square_duty': self.sq_duty_carrier,
-            'sawtooth': self.sawtooth_carrier,
-            'triangle': self.triangle_carrier
-        }
-
-        return Factory.show_signal(wav_data=W[wav_type])
+        return Factory.show_signal(wav_data=self.W[wav_type], zoom=zoom)
