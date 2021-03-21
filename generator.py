@@ -4,7 +4,7 @@ from scipy.io.wavfile import read, write
 import numpy as np
 import util
 import matplotlib.pyplot as plt 
-from typing import List, Dict, TypeVar
+from typing import List, Dict, Union, TypeVar
 RANGE = TypeVar('range')
 FIG = TypeVar('matplotlib.figure.Figure')
 
@@ -150,7 +150,8 @@ class Factory:
         write(f"simple_{hz}_{wav_type}.wav", rate=sr, data=data)
 
     @staticmethod
-    def show_signal(wav_data: List[float], zoom: int=500) -> FIG:
+    def show_signal(wav_data: Union[List[float], 
+                              Dict[str, List[float]]], zoom: int=500) -> FIG:
         """
         Generates graph showing wave form
         ---------------------------------
@@ -159,11 +160,24 @@ class Factory:
         Returns:
             - graph
         """
+        multi_signal = {
+            "sine":"red",
+            "square":"blue",
+            "square_duty":"purple",
+            "sawtooth":"green",
+            "triangle":"yellow"
+        }
         fig = plt.figure()
         plt.rcParams['figure.facecolor'] = 'black'
         plt.rcParams['axes.facecolor'] = 'black'
-        # we have the data set to 500 units to make the form visible
-        plt.plot(wav_data[:zoom], color='red')
+
+        if type(wav_data) == dict:
+
+            for wav_type, data in wav_data.items():
+                plt.plot(data[:zoom], color=multi_signal[wav_type])
+        else:
+            plt.plot(wav_data[:zoom], color='red')
+
         plt.close()
 
         return fig
@@ -328,5 +342,10 @@ class Wav:
         Generates a visual representation of the signal
         -----------------------------------------------
         """
+        if wav_type == 'all': 
+            wav_data=self.W
 
-        return Factory.show_signal(wav_data=self.W[wav_type], zoom=zoom)
+        else: 
+            wav_data = self.W[wav_type]
+
+        return Factory.show_signal(wav_data=wav_data, zoom=zoom)
