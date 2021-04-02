@@ -336,6 +336,7 @@ class Wav:
             Factory._make_wav(carrier=self.W[wav_type], sr=self.sr, 
                     hz=self.hz, wav_type=wav_type)
 
+
     def show_wav(self, wav_type: str, zoom: int=500) -> FIG:
 
         """
