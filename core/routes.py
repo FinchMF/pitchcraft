@@ -1,5 +1,6 @@
-from core import APP, layout
+from core import server, APP, layout
+app=server
 
-@APP.route('/')
+@app.route('/')
 def index():
     return layout.index_layout(APP)

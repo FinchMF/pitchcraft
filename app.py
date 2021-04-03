@@ -1,6 +1,6 @@
-from core import *
+from core import APP
 
-app = APP
+APP.title = "PitchCraft"
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    APP.run_server(debug=True)
