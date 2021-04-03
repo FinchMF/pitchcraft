@@ -9,4 +9,3 @@ def index_layout(APP):
     APP.layout=html.Div([
 
     ])
-

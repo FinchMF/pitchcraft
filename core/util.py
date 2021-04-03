@@ -412,13 +412,3 @@ class Detect:
             diff = self.find_cent_diff(freq_=Transform.pitch_to_hz[f[0:2]][int(f[2])])
         
         return f, diff
-
-
-
-
-
-
-
-
-
-
