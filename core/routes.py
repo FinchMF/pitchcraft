@@ -3,4 +3,8 @@ app=server
 
 @app.route('/')
 def index():
-    return layout.index_layout(APP)
+    return layout.Design.index_layout(APP)
+
+@app.route('/system')
+def system_build():
+    return layout.Design.sys_layout(APP)
