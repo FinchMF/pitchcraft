@@ -1,8 +1,5 @@
 
-import numpy as np
-from math import log2, pow
-
-from typing import List, Dict, TypeVar
+from core import np, log2, pow, List, Dict, TypeVar
 RANGE = TypeVar('range')
 
 # ~ ~ ~ ~ ~ ~ System Utils ~ ~ ~ ~ ~ ~ ~ #

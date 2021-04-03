@@ -1,13 +1,7 @@
 
-from scipy import signal as sg 
-from scipy.io.wavfile import read, write
-import numpy as np
-import util
-import matplotlib.pyplot as plt 
-from typing import List, Dict, Union, TypeVar
+from core import (sg, read, write, np, util, plt, List, Dict, Union, TypeVar)
 RANGE = TypeVar('range')
 FIG = TypeVar('matplotlib.figure.Figure')
-
 
 class Hz:
     """
