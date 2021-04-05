@@ -1,5 +1,6 @@
-from core import APP
+from core import APP, server
 
+server=server
 APP.title = "PitchCraft"
 
 if __name__ == "__main__":

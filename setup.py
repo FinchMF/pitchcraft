@@ -15,6 +15,7 @@ setup(
         'dash-html-components==1.1.2',
         'dash-renderer==1.9.0',
         'dash-table==4.11.2',
+        'Flask==1.1.2',
         'matplotlib==3.1.3',
         'gunicorn==20.0.4',
         'numpy==1.18.0',

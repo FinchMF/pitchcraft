@@ -15,10 +15,10 @@ import dash
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'pitchcraftsourcery'
 server.config.from_object(__name__)
-APP = dash.Dash(__name__, server=server)
+external_style_sheet = ['https://codepen.io/chriddyp/pen/dZVMbK.css']
+APP = dash.Dash(__name__, server=server, external_stylesheets=external_style_sheet)
 # application core
 from core.generator import *
 from core.util import *
-# from core.routes import index
 from core.layout import *
 from core.routes import *
