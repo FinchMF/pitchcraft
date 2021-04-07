@@ -6,6 +6,6 @@ COPY . /pitchcraft
 
 WORKDIR /pitchcraft
 
-RUN pip intall -r requirements.txt 
+RUN pip install -r requirements.txt 
 
 ENTRYPOINT ["gunicorn", "app:server"] 
