@@ -3,15 +3,14 @@ from setuptools import setup
 
 setup(
     package_dir={"":"/"},
-    name='core',
+    name='PitchCraft',
     description='signal and frequency system generator',
     author='Matthew Finch',
     author_emails='finchrmatthew@gmail.com',
-    packages=['core'],
+    packages=['pitchcraft'],
     install_requires=[
         'dash==1.19.0',
         'dash-core-components==1.15.0',
-        'dash-cytoscape==0.2.0',
         'dash-html-components==1.1.2',
         'dash-renderer==1.9.0',
         'dash-table==4.11.2',
