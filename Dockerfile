@@ -19,4 +19,4 @@ WORKDIR /pitchcraft
 
 RUN pip3 install -r requirements.txt 
 
-ENTRYPOINT ["gunicorn", "app:server"] 
+ENTRYPOINT ["./exe.sh"] 
