@@ -19,4 +19,6 @@ WORKDIR /pitchcraft
 
 RUN pip3 install -r requirements.txt 
 
-ENTRYPOINT ["./exe.sh"] 
+ENTRYPOINT [ "/bin/bash" ]
+
+CMD ["/exe.sh"] 
