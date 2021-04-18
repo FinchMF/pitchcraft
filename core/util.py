@@ -95,6 +95,26 @@ class Systems:
         'twenty_fourth_tone': (tones['twenty_fourth_tone']-1*8)
     }
 
+    fiveLimitIntvl: Dict[str, float] = {
+
+        # generates just intonation octave system
+
+        'perfect unison': float(1.0/1.0),
+        'minor second': float(16.0/15.0),
+        'major second': float(9.0/8.0),
+        'minor third': float(6.0/5.0),
+        'major third': float(5.0/4.0),
+        'perfect fourth': float(4.0/3.0),
+        'aug fourth': float(45.0/32.0),
+        'dim fifth': float(25.0/18.0),
+        'minor sixth': float(8.0/5.0),
+        'major sixth': float(5.0/3.0),
+        'minor seventh': float(16.0/9.0),
+        'major seventh': float(15.0/8.0),
+        'perfect octave': float(2.0/1.0)
+
+    }
+
     @classmethod
     def update_system_base(cls, n_base: int):
         """
@@ -194,6 +214,23 @@ class Network:
             overtone_series.append(harmonic)
 
         return overtone_series
+
+    @staticmethod
+    def make_just_series(hz: float) -> List[float]:
+
+        """
+        Generates Single Ocatve System of Just Intonation
+        -------------------------------------------------
+        """
+
+        just_series = []
+
+        for ii, intvl in Systems.fiveLimitIntvl.items():
+            # iterate through five limit system intervals
+            # multiple the base frequency by the interval
+            just_series.append(hz*intvl)
+
+        return just_series
 
 # ~ ~ ~ ~ ~ ~ Pitch Utils ~ ~ ~ ~ ~ ~ ~ #
 class Transform:

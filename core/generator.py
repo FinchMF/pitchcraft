@@ -106,6 +106,21 @@ class Hz:
         """
 
         return util.Network.make_overtone_series(hz=self.hz, system_size=system_size)
+        
+    def make_just_series(self) -> List[float]:
+
+        """
+        Dynamically generates Single Ocatve Just Intonation frequencies
+        ----------------------------------------------------------------
+        Recieves:
+            - Starting Hz
+        Returns:
+            - List of 12 frequencies respective to the start Hz
+            corresponding the just intervallic steps
+        """
+
+        return util.Network.make_just_series(hz=self.hz)
+
 
 class Factory:
     @staticmethod
