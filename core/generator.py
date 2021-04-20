@@ -19,7 +19,6 @@ class Hz:
             - interval system of divisions
             - octave system used to measure natural system size given 8 octaves
         """
-
         self.__hz = hz
         self.__intervals=util.Network.make_octave_interval_system(tone_intvl=Hz.tone_intvl)
         self.__interval_system=util.Systems.interval_systems[Hz.tone_intvl]
@@ -40,6 +39,10 @@ class Hz:
     @property
     def system_size(self):
         return self.__system_size
+    
+    @system_size.setter
+    def system_size(self, system_size: int):
+        self.__system_size=system_size
     
     @property
     def intervals(self):
@@ -156,7 +159,7 @@ class Factory:
         # if no modulation desired, a consistent tone is generated
         carrier *= 0.3 # the amplitude of the wav
         data = np.int16(carrier * 32767)
-        write(f"simple_{hz}_{wav_type}.wav", rate=sr, data=data)
+        write(f"sample_packages/simple_{hz}_{wav_type}.wav", rate=sr, data=data)
 
     @staticmethod
     def show_signal(wav_data: Union[List[float], 
