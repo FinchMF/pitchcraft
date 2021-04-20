@@ -1,7 +1,6 @@
 from core import server, APP, layout, os, send_from_directory
-app=server
 
-@app.route('/system')
+@server.route('/system')
 def system_build():
     return 'System page'
 
