@@ -4,11 +4,19 @@ from dash.dependencies import Input, Output, State
 APP = core.APP
 
 @APP.callback(
+    Output('input-sys-size', 'value'),
+    [Input('input-sys', 'value')],
+    prevent_initial_callback=True
+)
+def set_sysSize(input_sys):
+
+    return core.util.Systems.octave_systems[input_sys]
+
+@APP.callback(
     Output('download-link', 'href'),
     [Input('make-command', 'n_clicks')],
     state=[
         State('input-freq', 'value'),
-        State('input-base', 'value'),
         State('input-sys', 'value'),
         State('input-sys-size', 'value'),
         State('input-form', 'value')
@@ -16,8 +24,7 @@ APP = core.APP
     prevent_initial_callback=True
 )
 def system_samples(n_clicks, in_freq,
-                    in_base, in_sys,
-                    in_sys_size, in_form):
+                    in_sys, in_sys_size, in_form):
     
     core.generator.Hz().update(in_sys.replace(' ', '_'))
 
@@ -38,6 +45,3 @@ def system_samples(n_clicks, in_freq,
         core.os.remove(core.os.path.join('sample_packages', w))
     
     return 'downloads/samples.zip'
-
-
-    

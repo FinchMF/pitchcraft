@@ -12,3 +12,7 @@ def serve_static(path):
         os.path.join(root_dir), path
     )
 
+@server.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(server.root_path, 'assets'),
+                                'favicon.ico', mimetype='image/vnd.microsoft.icon')

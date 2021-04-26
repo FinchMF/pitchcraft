@@ -95,7 +95,7 @@ class Systems:
         'twenty_fourth_tone': (tones['twenty_fourth_tone']-1*8)
     }
 
-    fiveLimitIntvl: Dict[str, float] = {
+    fiveLimit_N1: Dict[str, float] = {
 
         # generates just intonation octave system
 
@@ -106,11 +106,102 @@ class Systems:
         'major third': float(5.0/4.0),
         'perfect fourth': float(4.0/3.0),
         'aug fourth': float(45.0/32.0),
-        'dim fifth': float(25.0/18.0),
+        'dim fifth': float(64.0/45.0),
         'minor sixth': float(8.0/5.0),
         'major sixth': float(5.0/3.0),
         'minor seventh': float(16.0/9.0),
         'major seventh': float(15.0/8.0),
+        'perfect octave': float(2.0/1.0)
+
+    }
+
+    fiveLimit_N2: Dict[str, float] = {
+
+        # generates just intonation octave system
+
+        'perfect unison': float(1.0/1.0),
+        'minor second': float(16.0/15.0),
+        'major second': float(10.0/9.0),
+        'minor third': float(6.0/5.0),
+        'major third': float(5.0/4.0),
+        'perfect fourth': float(4.0/3.0),
+        'aug fourth': float(45.0/32.0),
+        'dim fifth': float(64.0/45.0),
+        'minor sixth': float(8.0/5.0),
+        'major sixth': float(5.0/3.0),
+        'minor seventh': float(9.0/5.0),
+        'major seventh': float(15.0/8.0),
+        'perfect octave': float(2.0/1.0)
+
+    }
+
+    fiveLimit_Stnrd: Dict[str, float] = {
+
+        'perfect unison': float(1.0/1.0),
+        'minor second': float(16.0/15.0),
+        'major second': float(9.0/8.0),
+        'minor third': float(6.0/5.0),
+        'major third': float(5.0/4.0),
+        'perfect fourth': float(4.0/3.0),
+        'aug fourth': float(45.0/32.0),
+        'dim fifth': float(64.0/45.0),
+        'minor sixth': float(8.0/5.0),
+        'major sixth': float(5.0/3.0),
+        'minor seventh': float(9.0/5.0),
+        'major seventh': float(15.0/8.0),
+        'perfect octave': float(2.0/1.0)
+    }
+
+    fiveLimit_Extnd: Dict[str, float] = {
+
+        'perfect unison': float(1.0/1.0),
+        'minor second': float(16.0/15.0),
+        'major second': float(9.0/8.0),
+        'minor third': float(6.0/5.0),
+        'major third': float(5.0/4.0),
+        'perfect fourth': float(4.0/3.0),
+        'aug fourth': float(25.0/18.0),
+        'dim fifth': float(36.0/25.0),
+        'minor sixth': float(8.0/5.0),
+        'major sixth': float(5.0/3.0),
+        'minor seventh': float(9.0/5.0),
+        'major seventh': float(15.0/8.0),
+        'perfect octave': float(2.0/1.0)
+    }
+
+    sevenLimit: Dict[str, float] = {
+
+        'perfect unison': float(1.0/1.0),
+        'minor second': float(15.0/14.0),
+        'major second': float(8.0/7.0),
+        'minor third': float(6.0/5.0),
+        'major third': float(5.0/4.0),
+        'perfect fourth': float(4.0/3.0),
+        'aug fourth': float(7.0/5.0),
+        'dim fifth': float(10.0/7.0),
+        'perfect fifth': float(3.0/2.0),
+        'minor sixth': float(8.0/5.0),
+        'major sixth': float(5.0/3.0),
+        'minor seventh': float(7.0/4.0),
+        'major seventh': float(15.0/8.0),
+        'perfect octave': float(2.0/1.0)
+    }
+
+    seventeenLimit: Dict[str, float] = {
+
+        'perfect unison': float(1.0/1.0),
+        'minor second': float(14.0/13.0),
+        'major second': float(8.0/7.0),
+        'minor third': float(6.0/5.0),
+        'major third': float(5.0/4.0),
+        'perfect fourth': float(4.0/3.0),
+        'aug fourth': float(17.0/12.0),
+        'dim fifth': float(24.0/17.0),
+        'perfect fifth': float(3.0/2.0),
+        'minor sixth': float(8.0/5.0),
+        'major sixth': float(5.0/3.0),
+        'minor seventh': float(7.0/4.0),
+        'major seventh': float(13.0/7.0),
         'perfect octave': float(2.0/1.0)
 
     }
